@@ -1,9 +1,8 @@
 const express = require("express");
 const app = express();
 const port = 3000;
-const uuid = require("uuid");
+// const uuid = require("uuid");
 
-// Middleware
 app.use(express.json());
 
 const todos = [
@@ -42,12 +41,18 @@ app.put("/todos/:id", (req, res) => {
     todo.isCompleted = req.body.isCompleted;
     res.json(todo);
   } else {
-    res.status(404).json({ message: "Todo not found" });
+    res.send("Todo not found");
   }
 });
 
 app.delete("/todos/:id", (req, res) => {
-  res.json([]);
+  let todo = todos.findIndex((todo) => todo.id === req.params.id);
+  if (todo !== -1) {
+    todos.splice(todo, 1);
+    res.json({ message: "Todo deleted" });
+  } else {
+    res.send("Todo not found");
+  }
 });
 
 app.listen(port, () => {
